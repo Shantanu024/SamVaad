@@ -51,16 +51,16 @@ app.use("/api/auth", userRouter);// another way to import user routes --> requir
 app.use("/api/messages", messageRouter);
 
 //connecting to database
-await connectDB();
+connectDB().catch((error) => {
+  console.error("Failed to connect to database:", error);
+});
 
 const PORT = process.env.PORT || 5000;
 
 //Starting the server   
-if(process.env.NODE_ENV !== "production"){
-  server.listen(PORT, () => {
-    console.log(`Server is running on PORT : ${PORT}`);
-  });
-}
+server.listen(PORT, () => {
+  console.log(`Server is running on PORT : ${PORT}`);
+});
 
 //Exporting server for vercel deployment
 export default server;
