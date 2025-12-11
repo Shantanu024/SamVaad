@@ -2,40 +2,40 @@
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
-import http from "http";
+// import http from "http";  // COMMENTED OUT: Not needed for Vercel serverless
 import { connectDB } from "./lib/db.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
-import { Server } from "socket.io";
+// import { Server } from "socket.io";  // COMMENTED OUT: Socket.io not compatible with Vercel serverless functions
 
-//Creating Express app and HTTP server
+//Creating Express app (removed HTTP server for Vercel compatibility)
 const app = express();
-const server = http.createServer(app); 
+// const server = http.createServer(app);  // COMMENTED OUT: Vercel handles HTTP server
 
-//Setting up Socket.io for real-time communication
-export const io = new Server(server, {
-  cors: {origin: "*"}
-});
+// COMMENTED OUT: Socket.io initialization - not compatible with Vercel serverless
+// export const io = new Server(server, {
+//   cors: {origin: "*"}
+// });
 
 //Store online users
 export const userSocketMap = {};
 
-//Socket.io connection handler
-io.on("connection", (socket) => {
-  const userId = socket.handshake.query.userId;
-  console.log("User Connected", userId);
+// COMMENTED OUT: Socket.io connection handler - for development only
+// io.on("connection", (socket) => {
+//   const userId = socket.handshake.query.userId;
+//   console.log("User Connected", userId);
 
-  if(userId) userSocketMap[userId] = socket.id;
+//   if(userId) userSocketMap[userId] = socket.id;
 
-  // Emit online users to all connected clients
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+//   // Emit online users to all connected clients
+//   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-  socket.on("disconnect", () => {
-    console.log("User Disconnected", userId);
-    delete userSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
-  });
-})
+//   socket.on("disconnect", () => {
+//     console.log("User Disconnected", userId);
+//     delete userSocketMap[userId];
+//     io.emit("getOnlineUsers", Object.keys(userSocketMap));
+//   });
+// })
 
 //Middleware setup
 app.use(cors());
@@ -57,12 +57,12 @@ connectDB().catch((error) => {
 
 const PORT = process.env.PORT || 5000;
 
-//Starting the server for development
-if (process.env.NODE_ENV !== "production") {
-  server.listen(PORT, () => {
-    console.log(`Server is running on PORT : ${PORT}`);
-  });
-}
+// COMMENTED OUT: HTTP server listening - not needed for Vercel serverless
+// if (process.env.NODE_ENV !== "production") {
+//   server.listen(PORT, () => {
+//     console.log(`Server is running on PORT : ${PORT}`);
+//   });
+// }
 
 //Exporting app for vercel deployment
 export default app;
