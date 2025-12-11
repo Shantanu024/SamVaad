@@ -1,7 +1,9 @@
 import User from "../models/User.js";
 import Message from "../models/message.js";
 import cloudinary from "../lib/cloudinary.js";
-import { io, userSocketMap } from "../server.js";
+// COMMENTED OUT FOR VERCEL DEPLOYMENT: Socket.io import removed - not available in serverless environment
+// import { io, userSocketMap } from "../server.js";
+import { userSocketMap } from "../server.js";
 
 // Get all users except logged in user
 export const getAllUsers = async(req, res) => {
@@ -80,11 +82,12 @@ export const sendMessage = async(req, res) => {
             image: imageUrl
         })
 
+        // COMMENTED OUT FOR VERCEL DEPLOYMENT: Socket.io emit removed - not available in serverless environment
         // Emit the new message to the receiver's socket
-        const receiverSocketId = userSocketMap[receiverId];
-        if(receiverSocketId){
-            io.to(receiverSocketId).emit("newMessage", newMessage);
-        }
+        // const receiverSocketId = userSocketMap[receiverId];
+        // if(receiverSocketId){
+        //     io.to(receiverSocketId).emit("newMessage", newMessage);
+        // }
         res.json({success:true, newMessage});
 
     }

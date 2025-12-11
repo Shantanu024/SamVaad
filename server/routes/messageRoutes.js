@@ -4,9 +4,12 @@ import { getAllUsers, getMessages, markMessageAsSeen, sendMessage } from "../con
 
 const messageRouter = express.Router();
 
-messageRouter.get("/users", protectRoute, getAllUsers);
-messageRouter.get("/:id", protectRoute, getMessages);
-messageRouter.put("/mark/:id", protectRoute, markMessageAsSeen);
-messageRouter.post("/send/:id", protectRoute, sendMessage);
+// ADDED: Wrapper function to catch async errors and pass to error handler
+const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
+messageRouter.get("/users", protectRoute, asyncHandler(getAllUsers));
+messageRouter.get("/:id", protectRoute, asyncHandler(getMessages));
+messageRouter.put("/mark/:id", protectRoute, asyncHandler(markMessageAsSeen));
+messageRouter.post("/send/:id", protectRoute, asyncHandler(sendMessage));
 
 export default messageRouter;

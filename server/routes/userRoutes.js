@@ -4,9 +4,12 @@ import { login, checkAuth, signup, updateProfile } from "../controllers/userCont
 
 const userRouter = express.Router();
 
-userRouter.post("/SignUp", signup);
-userRouter.post("/login", login);
-userRouter.put("/updated-profile", protectRoute, updateProfile);
-userRouter.get("/check", protectRoute, checkAuth);
+// ADDED: Wrapper function to catch async errors and pass to error handler
+const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
+userRouter.post("/SignUp", asyncHandler(signup));
+userRouter.post("/login", asyncHandler(login));
+userRouter.put("/updated-profile", protectRoute, asyncHandler(updateProfile));
+userRouter.get("/check", protectRoute, asyncHandler(checkAuth));
 
 export default userRouter;
