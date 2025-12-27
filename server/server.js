@@ -53,10 +53,9 @@ app.use("/api/messages", messageRouter);
 //connecting to database
 await connectDB();
 
-const PORT = process.env.PORT || 5000;
-
 //Starting the server   
-if(process.env.NODE_ENV === "production"){
+if(process.env.NODE_ENV !== "production"){
+  const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => {
     console.log(`Server is running on PORT : ${PORT}`);
   });
