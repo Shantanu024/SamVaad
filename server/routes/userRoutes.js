@@ -4,7 +4,7 @@ import { login, checkAuth, signup, updateProfile } from "../controllers/userCont
 
 const userRouter = express.Router();
 
-userRouter.post("/SignUp", signup);
+userRouter.post("/signup", signup);
 userRouter.post("/login", login);
 userRouter.put("/updated-profile", protectRoute, updateProfile);
 userRouter.get("/check", protectRoute, checkAuth);
